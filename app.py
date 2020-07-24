@@ -4,6 +4,7 @@ from models.models import Db, User, Post
 from forms.forms import SignupForm, LoginForm, NewpostForm
 from os import environ
 from passlib.hash import sha256_crypt
+from datetime import datetime
 
 load_dotenv('.env')
 
@@ -23,13 +24,13 @@ def index():
         session_user = User.query.filter_by(username=session['username']).first()
         posts = Post.query\
             .join(User, User.uid == Post.author)\
-            .add_columns(Post.content, Post.author, Post.pid, User.username) \
+            .add_columns(Post.content, Post.author, Post.pid, Post.createdAt, User.username, User.createdAt) \
             .filter(Post.author == session_user.uid).all()
         return render_template('index.html', title='Home', posts=posts, session_username=session_user.username)
     else:
         all_posts = Post.query \
             .join(User, User.uid == Post.author) \
-            .add_columns(Post.content, Post.author, Post.pid, User.username).all()
+            .add_columns(Post.content, Post.author, Post.pid, Post.createdAt, User.username, User.createdAt).all()
         return render_template('index.html', title='Home', posts=all_posts)
 
 
@@ -86,7 +87,7 @@ def newpost():
         content = request.form['content']
 
         # Create in DB
-        new_post = Post(author=session_user.uid, content=content)
+        new_post = Post(author=session_user.uid, content=content, createdAt=datetime.now())
         Db.session.add(new_post)
         Db.session.commit()
 
@@ -118,7 +119,7 @@ def signup():
             flash('The username already exists. Please pick another one.')
             return redirect(url_for('signup'))
         else:
-            user = User(username=username, password=sha256_crypt.hash(password))
+            user = User(username=username, password=sha256_crypt.hash(password), createdAt=datetime.now())
             Db.session.add(user)
             Db.session.commit()
             flash('Congratulations, you are now a registered user!')
