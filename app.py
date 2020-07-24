@@ -8,7 +8,7 @@ from passlib.hash import sha256_crypt
 load_dotenv('.env')
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/lab5'
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = environ.get('SECRET_KEY')
 Db.init_app(app)
@@ -21,7 +21,11 @@ def index():
     # Control by login status
     if 'username' in session:
         session_user = User.query.filter_by(username=session['username']).first()
-        posts = Post.query.filter_by(author=session_user.uid).all()
+        posts = Post.query\
+            .join(User, User.uid == Post.author)\
+            .add_columns(Post.content, Post.author, Post.pid, User.username) \
+            .filter(Post.author == session_user.uid).all()
+        print(dir(posts[0]))
         return render_template('index.html', title='Home', posts=posts, session_username=session_user.username)
     else:
         all_posts = Post.query.all()
