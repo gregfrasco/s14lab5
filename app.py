@@ -25,10 +25,11 @@ def index():
             .join(User, User.uid == Post.author)\
             .add_columns(Post.content, Post.author, Post.pid, User.username) \
             .filter(Post.author == session_user.uid).all()
-        print(dir(posts[0]))
         return render_template('index.html', title='Home', posts=posts, session_username=session_user.username)
     else:
-        all_posts = Post.query.all()
+        all_posts = Post.query \
+            .join(User, User.uid == Post.author) \
+            .add_columns(Post.content, Post.author, Post.pid, User.username).all()
         return render_template('index.html', title='Home', posts=all_posts)
 
 
