@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block styles %}
-    <link href="{{ url_for('static', filename='./css/index.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='./css/index.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block scripts %}
@@ -9,21 +9,21 @@
 
 {% block content %}
 
-    <h1>New Post</h1>
+<h1>New Post</h1>
 
-    <form method="POST" action="/newpost" novalidate>
-        {{ form.hidden_tag() }}
+<form action="/newpost" method="POST" novalidate>
+    {{ form.hidden_tag() }}
 
-        <div class="form-group">
-            {{ form.content.label }}<br>
-            {{ form.content(rows='12',cols='60') }}<br>
-            {% for error in form.content.errors %}
-                <span class="form-error-message">[{{ error }}]</span>
-            {% endfor %}
-        </div>
+    <div class="form-group">
+        {{ form.content.label }}<br>
+        {{ form.content(rows='12',cols='60') }}<br>
+        {% for error in form.content.errors %}
+        <span class="form-error-message">[{{ error }}]</span>
+        {% endfor %}
+    </div>
 
-        {{ form.submit(class="form-submit") }}
+    {{ form.submit(class="form-submit") }}
 
-    </form>
+</form>
 
 {% endblock %}

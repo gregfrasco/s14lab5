@@ -1,39 +1,34 @@
 {% extends "layout.html" %}
 
 {% block styles %}
-    <link href="{{ url_for('static', filename='./css/index.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='./css/index.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block scripts %}
 {% endblock %}
 
 {% block content %}
-
-    <h1>Signup form</h1>
-
-    <form method="POST" action="/signup" novalidate>
-        {{ form.hidden_tag() }}
-
+<div class="text-center">
+    <form action="/signup" method="POST" novalidate>
+        <h1 class="h3 mb-3 font-weight-normal">Signup form</h1>
         <div class="form-group">
+            {{ form.hidden_tag() }}
             {{ form.username.label }}<br>
             {{ form.username(size=32) }}<br>
             {% for error in form.username.errors %}
-                <span class="form-error-message">[{{ error }}]</span>
+            <span class="form-error-message">[{{ error }}]</span>
             {% endfor %}
         </div>
-
         <div class="form-group">
+
             {{ form.password.label }}<br>
             {{ form.password(size=32) }}<br>
             {% for error in form.password.errors %}
-                <span class="form-error-message">[{{ error }}]</span>
+            <span class="form-error-message">[{{ error }}]</span>
             {% endfor %}
         </div>
-
         {{ form.submit(class="form-submit") }}
-
+        <p>Already signed up? <a href="{{ url_for('login') }}">Log in!</a></p>
     </form>
-
-    <p>Already signed up? <a href="{{ url_for('login') }}">Log in!</a></p>
-
+</div>
 {% endblock %}

@@ -1,51 +1,52 @@
 {% extends "layout.html" %}
 
 {% block styles %}
-    <link href="{{ url_for('static', filename='./css/index.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='./css/index.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block scripts %}
 {% endblock %}
 
 {% block content %}
-
-    {% if session_username is defined %}
-
-        <h1>Hi, {{ session_username }} !</h1>
-
-    {% else %}
-
-        <h1>Hi, guest!</h1>
-
-    {% endif %}
-
-
-    <div id="posts">
-        {% for p in posts %}
-            <p> Author {{ p.username }}: {{ p.content }}</p>
-        {% endfor %}
-    </div>
-
-
-    <div id="forms">
+<header>
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Lab 5</a>
+        <ul class="nav navbar-nav ml-auto">
+            {% if session_username is defined %}
+            <li class="nav-item active">
+                <div class="nav-link">Hi, {{ session_username }} !</div>
+            </li>
+            {% else %}
+            <li class="nav-item active">
+                <div class="nav-link">Hi, guest!</div>
+            </li>
+            {% endif %}
+        </ul>
         {% if session_username is defined %}
-
-            <form action="/logout" method="POST">
-                <button type="submit"> Log out</button>
-            </form>
-
-            <form action="/newpost" method="GET">
-                <button type="submit"> New Post</button>
-            </form>
-
+        <form action="/newpost" class="form-inline" method="GET">
+            <button class="btn btn-outline-secondary btn-sm" type="submit"> New post</button>
+        </form>
+        <form action="/logout" class="form-inline" method="POST">
+            <button class="btn btn-outline-secondary btn-sm" type="submit"> Log out</button>
+        </form>
         {% else %}
-            <form action="/login" method="GET">
-                <button type="submit"> Log in</button>
-            </form>
-            <form action="/signup" method="GET">
-                <button type="submit"> Sign up</button>
-            </form>
+        <form action="/login" class="form-inline" method="GET">
+            <button class="btn btn-outline-secondary btn-sm" type="submit"> Log in</button>
+        </form>
+        <form action="/signup" class="form-inline" method="GET">
+            <button class="btn btn-outline-secondary btn-sm" type="submit"> Sign up</button>
+        </form>
         {% endif %}
+    </nav>
+</header>
+<div class="container">
+    {% for p in posts %}
+    <div class="card" style="margin-top: 1rem">
+        <div class="card-body">
+            <h6 class="card-subtitle mb-2 text-muted">Author {{ p.username }}</h6>
+            <p class="card-text">{{ p.content }}</p>
+        </div>
     </div>
-
+    {% endfor %}
+</div>
 {% endblock %}
